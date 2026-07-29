@@ -38,13 +38,13 @@ tools:
       required: [query]
 
   - name: lookup
-    description: "Tra cứu thông tin trên internet."
+    description: "Tra cứu thông tin trên internet. Khi user hỏi tin/tin tức/news/hôm nay, dùng topic=news và timeframe=day. Giữ query là chủ đề gốc ngắn gọn, không thêm 'news', 'tin tức', hay diễn giải thêm; ví dụ 'Tin tức AI hôm nay' -> query='AI', topic='news', timeframe='day'."
     parameters:
       type: object
       properties:
-        query: {type: string, default: "", description: "Truy vấn"}
-        topic: {type: string, enum: [general, news], default: "general", description: "Phân loại"}
-        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian"}
+        query: {type: string, default: "", description: "Chủ đề gốc cần tìm, ngắn gọn; không thêm 'news'/'tin tức' nếu đã đặt topic=news."}
+        topic: {type: string, enum: [general, news], default: "general", description: "Dùng news cho yêu cầu tin tức/news; general cho tra cứu chung."}
+        timeframe: {type: string, enum: [day, week, month, year], default: "week", description: "Khoảng thời gian; dùng day khi user nói hôm nay/today/mới nhất trong ngữ cảnh tin tức."}
         max_results: {type: integer, default: 5, description: "Số kết quả"}
       required: [query]
 

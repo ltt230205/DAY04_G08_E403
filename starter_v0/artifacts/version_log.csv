@@ -1,1 +1,2 @@
 version,author,changed_artifact,artifact_version,prompt_hash,tools_hash,reason,hypothesis,metric_name,metric_before,metric_after,run_file
+v1,team,tools.yaml,v1+pf0c107a9d7a1+t2e14285ec846,f0c107a9d7a14032c948d642d7c36f2a85cb6d69a099530093a874c94d472446,2e14285ec846700c63c893723adc28981144a8742dc313f8ac7d7756bdba137a,Clarify lookup news argument contract,If lookup says topic news owns the news intent then Gemini will keep query as the core topic,case_accuracy,0.9091,0.875,runs/v0_B_base_gemini_20260729T153009607417.json
