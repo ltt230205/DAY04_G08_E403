@@ -1,0 +1,39 @@
+{
+  "transcript_id": "v3_openrouter_20260729T160143221445",
+  "version": "v3",
+  "artifact_version": "v3+pdca118a418c6+t53bcab640c99",
+  "prompt_hash": "dca118a418c6336020bf1694bb3884420f662321ded53c8ecf092f775997e722",
+  "tools_hash": "53bcab640c99d89d5cf58c5017958f1f2973351f3f8e813fe80bdb3f8a681cc1",
+  "provider": "openrouter",
+  "model": "openai/gpt-4o-mini",
+  "system_prompt": "C:\\Users\\PC\\Công Việc\\VinAI\\DAY04_G08_E403\\starter_v0\\artifacts\\system_prompt.md",
+  "tools": "C:\\Users\\PC\\Công Việc\\VinAI\\DAY04_G08_E403\\starter_v0\\artifacts\\tools.yaml",
+  "history_window": 5,
+  "max_tool_rounds": 4,
+  "created_at": "2026-07-29T16:01:43",
+  "updated_at": "2026-07-29T16:02:34",
+  "turns": [
+    {
+      "turn_index": 1,
+      "started_at": "2026-07-29T16:02:07",
+      "user": "Tin tức mới hôm nay có gì",
+      "status": "provider_error",
+      "assistant_text": null,
+      "rounds": [],
+      "tool_events": [],
+      "error": "RuntimeError: Missing API key env var: OPENROUTER_API_KEY",
+      "ended_at": "2026-07-29T16:02:08"
+    },
+    {
+      "turn_index": 2,
+      "started_at": "2026-07-29T16:02:31",
+      "user": "Tin tức mới hôm nay có gì",
+      "status": "provider_error",
+      "assistant_text": null,
+      "rounds": [],
+      "tool_events": [],
+      "error": "RuntimeError: Missing API key env var: OPENROUTER_API_KEY",
+      "ended_at": "2026-07-29T16:02:31"
+    }
+  ]
+}
