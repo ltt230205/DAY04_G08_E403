@@ -8,6 +8,11 @@
 
 - Team:
 - Members:
+    Lê Trí Tùng
+    Nguyễn Quốc Bảo
+    Nguyễn Thùy Trang
+    Đỗ Thị Thanh Loan
+    Vũ Xuân Anh
 - Provider/model:
 
 ---
