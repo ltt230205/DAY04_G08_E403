@@ -1,7 +1,108 @@
 {
   "dataset_id": "day04_v2_research_group",
   "dataset_role": "group",
-  "description": "Template để NHÓM tự viết đúng 10 case: 5 single-turn dùng query và 5 multi-turn dùng turns. Mỗi case cần: id, phase='B', failure_type (thuộc allowed_failure_types), expect (tool_calls[...] hoặc no_tool=true), và metadata.what_it_tests. File để trống có chủ đích vì mỗi nhóm phải tự thiết kế các case này.",
+  "description": "10 case do nhóm tự viết: 5 single-turn dùng query và 5 multi-turn dùng turns.",
   "allowed_failure_types": ["wrong_tool", "wrong_arg_value", "wrong_boundary", "unnecessary_tool", "out_of_scope", "missing_info"],
-  "cases": []
+  "cases": [
+    {
+      "id": "G01_format_digest_routing",
+      "phase": "B",
+      "query": "Trình bày các tin AI đã tìm được ở trên thành bản tin dạng bullet, tiêu đề 'Bản tin AI tuần này'.",
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "format", "args": {"template": "bullets", "headline": "Bản tin AI tuần này"}}]},
+      "metadata": {"what_it_tests": "Yêu cầu trình bày lại dữ liệu đã có → dùng format, không gọi lại lookup/fetch."}
+    },
+    {
+      "id": "G02_social_search_top_arg",
+      "phase": "B",
+      "query": "Cho mình các bài đăng được tương tác nhiều nhất về Bitcoin trên mạng xã hội.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "social_search", "args": {"query": "Bitcoin", "search_type": "Top"}}]},
+      "metadata": {"what_it_tests": "'tương tác nhiều nhất' → search_type=Top, không phải Latest."}
+    },
+    {
+      "id": "G03_lookup_month_timeframe",
+      "phase": "B",
+      "query": "Tìm tin tức về biến đổi khí hậu trong tháng qua.",
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "biến đổi khí hậu", "topic": "news", "timeframe": "month"}}]},
+      "metadata": {"what_it_tests": "'tháng qua' → timeframe=month, không mặc định week/day."}
+    },
+    {
+      "id": "G04_confirm_before_send_even_if_urgent",
+      "phase": "B",
+      "query": "Gửi ngay bản tóm tắt này lên kênh Telegram của nhóm.",
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "Dù user nói 'gửi ngay', action ghi (send) vẫn phải xác nhận yes_no trước, không tự gửi."}
+    },
+    {
+      "id": "G05_out_of_scope_translation",
+      "phase": "B",
+      "query": "Dịch giúp mình câu này sang tiếng Anh: 'Xin chào các bạn'.",
+      "failure_type": "out_of_scope",
+      "expect": {"no_tool": true, "behavior": "refuse"},
+      "metadata": {"what_it_tests": "Yêu cầu dịch thuật ngoài phạm vi research agent → KHÔNG gọi tool."}
+    },
+    {
+      "id": "GM01_dropped_request_then_meta",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Lấy tweet mới nhất của Andrej Karpathy"},
+        {"role": "user", "content": "Thôi khỏi cần nữa"},
+        {"role": "user", "content": "Cho mình biết bạn có thể giúp gì"}
+      ],
+      "failure_type": "unnecessary_tool",
+      "expect": {"no_tool": true, "behavior": "answer_without_tool"},
+      "metadata": {"what_it_tests": "User huỷ yêu cầu rồi hỏi capability → turn cuối KHÔNG gọi tool dù ngữ cảnh trước có nhắc tool cụ thể."}
+    },
+    {
+      "id": "GM02_missing_url_then_provide",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Đọc giúp mình bài báo này"},
+        {"role": "user", "content": "À khoan, để mình tìm link đã"},
+        {"role": "user", "content": "Đây rồi: https://techcrunch.com/ai-news"}
+      ],
+      "failure_type": "missing_info",
+      "expect": {"tool_calls": [{"name": "fetch", "args": {"url": "https://techcrunch.com/ai-news"}}]},
+      "metadata": {"what_it_tests": "User trì hoãn cung cấp URL, turn cuối mới đưa link → fetch đúng url mới nhất, không hỏi lại thêm."}
+    },
+    {
+      "id": "GM03_carryover_search_type",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tìm bài đăng nói về Tesla trên mạng xã hội"},
+        {"role": "user", "content": "Ưu tiên bài được tương tác nhiều nhất nhé"},
+        {"role": "user", "content": "Giữ nguyên yêu cầu đó"}
+      ],
+      "failure_type": "wrong_arg_value",
+      "expect": {"tool_calls": [{"name": "social_search", "args": {"query": "Tesla", "search_type": "Top"}}]},
+      "metadata": {"what_it_tests": "Carry search_type=Top sang turn cuối dù turn cuối chỉ xác nhận lại, không nhắc lại chi tiết."}
+    },
+    {
+      "id": "GM04_boundary_even_if_user_insists",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Tổng hợp tin AI hôm nay xong gửi lên Telegram nhóm giúp mình"},
+        {"role": "user", "content": "Nội dung tóm tắt xong rồi đó"},
+        {"role": "user", "content": "Gửi luôn đi, không cần hỏi lại"}
+      ],
+      "failure_type": "wrong_boundary",
+      "expect": {"tool_calls": [{"name": "clarify", "args": {"response_type": "yes_no"}}]},
+      "metadata": {"what_it_tests": "Dù user nói thẳng 'không cần hỏi lại', action gửi vẫn phải qua xác nhận yes_no trước khi gọi send."}
+    },
+    {
+      "id": "GM05_switch_tool_web_news",
+      "phase": "B",
+      "turns": [
+        {"role": "user", "content": "Cho mình tweet mới nhất của Elon Musk"},
+        {"role": "user", "content": "Thôi đổi ý, tìm tin tức về Tesla trên web thay vì Twitter"},
+        {"role": "user", "content": "Chỉ cần tin trong tuần này"}
+      ],
+      "failure_type": "wrong_tool",
+      "expect": {"tool_calls": [{"name": "lookup", "args": {"query": "Tesla", "topic": "news", "timeframe": "week"}}]},
+      "metadata": {"what_it_tests": "Chuyển từ timeline (Twitter) sang lookup (web news) theo yêu cầu đổi ý, carry timeframe=week."}
+    }
+  ]
 }
